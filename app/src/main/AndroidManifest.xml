@@ -25,6 +25,15 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity
+            android:name=".TriangleDemoActivity"
+            android:theme="@style/AppThemeNoActionBar"
+            android:screenOrientation="portrait">
+            <!-- Tell GameActivity the name of our .so file.
+            This will be optional after the release 1.1.0 -->
+            <meta-data android:name="android.app.lib_name"
+                android:value="a4vulkancamera" />
+        </activity>
     </application>
 
 </manifest>

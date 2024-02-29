@@ -3,29 +3,30 @@ package com.alanwang4523.a4vulkancamera;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.View;
 
-import com.alanwang4523.a4vulkancamera.databinding.ActivityMainBinding;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     // Used to load the 'a4vulkancamera' library on application startup.
     static {
         System.loadLibrary("a4vulkancamera");
     }
 
-    private ActivityMainBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        findViewById(R.id.btnTriangleDemo).setOnClickListener(this);
+    }
 
-        // Example of a call to a native method
-        TextView tv = binding.sampleText;
-        tv.setText(stringFromJNI());
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnTriangleDemo:
+                TriangleDemoActivity.launchActivity(MainActivity.this);
+                break;
+        }
     }
 
     /**

@@ -9,31 +9,33 @@ cmake_minimum_required(VERSION 3.6.0)
 
 project("a4vulkancamera")
 
-# Creates and names a library, sets it as either STATIC
-# or SHARED, and provides the relative paths to its source code.
-# You can define multiple libraries, and CMake builds them for you.
-# Gradle automatically packages shared libraries with your APK.
+# Integrate GameActivity, refer to
+#     https://d.android.com/games/agdk/integrate-game-activity
+# for the detailed instructions.
+find_package(game-activity REQUIRED CONFIG)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall \
+                     -DVK_USE_PLATFORM_ANDROID_KHR")
+
+set(PATH_TO_COMMON ${CMAKE_CURRENT_SOURCE_DIR}/common)
+set(PATH_TO_TRIANGLE ${CMAKE_CURRENT_SOURCE_DIR}/triangle)
+
+
+include_directories(${PATH_TO_COMMON}/vulkan_wrapper)
+
+file(GLOB_RECURSE CPP_FILES_COMMON "${PATH_TO_COMMON}/*.cpp")
+file(GLOB_RECURSE CPP_FILES_TRIANGLE "${PATH_TO_TRIANGLE}/*.cpp")
 
 add_library( # Sets the name of the library.
         a4vulkancamera
-
-        # Sets the library as a shared library.
         SHARED
-
-        # Provides a relative path to your source file(s).
-        native-lib.cpp)
-
-# Searches for a specified prebuilt library and stores the path as a
-# variable. Because CMake includes system libraries in the search path by
-# default, you only need to specify the name of the public NDK library
-# you want to add. CMake verifies that the library exists before
-# completing its build.
+        ${CPP_FILES_COMMON}
+        ${CPP_FILES_TRIANGLE}
+        native-lib.cpp
+        )
 
 find_library( # Sets the name of the path variable.
         log-lib
-
-        # Specifies the name of the NDK library that
-        # you want CMake to locate.
         log)
 
 # Specifies libraries CMake should link to your target library. You
@@ -42,7 +44,7 @@ find_library( # Sets the name of the path variable.
 
 target_link_libraries( # Specifies the target library.
         a4vulkancamera
-
-        # Links the target library to the log library
-        # included in the NDK.
-        ${log-lib})
+        ${log-lib}
+        game-activity::game-activity
+        android
+        )

@@ -5,6 +5,8 @@ plugins {
 android {
     namespace 'com.alanwang4523.a4vulkancamera'
     compileSdk 33
+//    ndkVersion "16.1.4479499"
+    ndkVersion "23.1.7779620"
 
     defaultConfig {
         applicationId "com.alanwang4523.a4vulkancamera"
@@ -13,11 +15,19 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // Shader compilation directives, put glsl shaders to app/src/main/shaders
+        // android studio will pick them up and compile them into APK/assets/shaders
+        // KNOWN ISSUE:  if shaders having errors, it takes long time for gradle to timeout
+        //               but it will eventually time out and complain about shader compiling
+        shaders {
+            glslcArgs.addAll(['-c', '-g'])
+        }
+
         externalNativeBuild {
             cmake {
                 abiFilters 'armeabi-v7a', 'arm64-v8a'
                 cppFlags '-std=c++11'
+                arguments '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=c++_static'
             }
         }
     }
@@ -35,16 +45,20 @@ android {
     externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
-            version "3.6.0"
+            version '3.6.0'
         }
     }
-    buildFeatures {
-        viewBinding true
-    }
+    buildTypes.release.minifyEnabled = false
+    buildFeatures.prefab  = true
+//    buildFeatures {
+//        viewBinding true
+//    }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'com.google.android.material:material:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    implementation "androidx.games:games-activity:1.1.0"
 }
