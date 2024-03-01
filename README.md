@@ -3,7 +3,7 @@ A Vulkan preview demo for Android Camera
 
 **效果截图**
 <div align="left">
-<img src=./Screenshots/Screenshot_20240301_200640.png.jpg width=30% />
+<img src=./Screenshots/Screenshot_20240301_200640.png width=30% />
 </div>
 
 # Reference
