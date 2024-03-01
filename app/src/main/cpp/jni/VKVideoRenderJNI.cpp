@@ -4,79 +4,84 @@
  * Date: 2024/3/1 15:08.
  * Mail: alanwang4523@gmail.com
  */
-#include "VKVideoRenderJNI.h"
-#include "VKVideoRendererContext.h"
+
 #include <android/native_window_jni.h>
 #include "utils/Log.h"
+#include "VKVideoRenderJNI.h"
+#include "engine/VKVideoRenderer.h"
 
-JNIMETHOD(void, create)(JNIEnv * env, jobject obj, jint type)
+struct fields_st {
+    jfieldID context;
+};
+static fields_st gFields;
+
+JNIMETHOD(void, nativeCreate)(JNIEnv * env, jobject obj)
 {
-    LOGE("create");
-    VKVideoRendererContext::createContext(env, obj, type);
+    LOGE("nativeCreate");
+    jclass cls = env->GetObjectClass(obj);
+    if (NULL == cls) {
+        LOGE("Could not find com/alanwang4523/a4vulkancamera/render/VKVideoRenderer.");
+        return;
+    }
+    gFields.context = env->GetFieldID(cls, "mNativeContext", "J");
+    if (NULL == gFields.context) {
+        LOGE("Could not find mNativeContext.");
+        return;
+    }
+    auto * vkVideoRenderer = new VKVideoRenderer();
+    env->SetLongField(obj, gFields.context, (jlong)vkVideoRenderer);
 }
 
-JNIMETHOD(void, destroy)(JNIEnv * env, jobject obj)
+JNIMETHOD(void, nativeDestroy)(JNIEnv * env, jobject obj)
 {
-    LOGE("destroy");
-    VKVideoRendererContext::deleteContext(env, obj);
+    LOGE("nativeDestroy");
+    auto * vkVideoRenderer = (VKVideoRenderer *)env->GetLongField(obj, gFields.context);
+    if (vkVideoRenderer) {
+        delete vkVideoRenderer;
+    }
+    env->SetLongField(obj, gFields.context, (jlong)0);
 }
 
-JNIMETHOD(void, init)(JNIEnv * env, jobject obj, jobject surface, jint width, jint height,jobject assetManager)
+JNIMETHOD(void, nativeInit)(JNIEnv * env, jobject obj, jobject surface, jint width, jint height,jobject assetManager)
 {
-    LOGE("init");
-    VKVideoRendererContext* context = VKVideoRendererContext::getContext(env, obj);
+    LOGE("nativeInit");
+    auto * vkVideoRenderer = (VKVideoRenderer *)env->GetLongField(obj, gFields.context);
 
     ANativeWindow *window = surface ? ANativeWindow_fromSurface(env, surface) : nullptr;
+    AAssetManager *manager = AAssetManager_fromJava(env,assetManager);
 
-    AAssetManager*manager = AAssetManager_fromJava(env,assetManager);
-
-    if (context) context->init(window, (size_t)width, (size_t)height, manager);
+    if (vkVideoRenderer) {
+        vkVideoRenderer->init(window, (size_t)width, (size_t)height, manager);
+    }
 }
 
-JNIMETHOD(void, render)(JNIEnv * env, jobject obj)
+JNIMETHOD(void, nativeDraw)(JNIEnv * env, jobject obj, jbyteArray data, jint width, jint height, jint rotation)
 {
-    LOGE("render");
-    VKVideoRendererContext* context = VKVideoRendererContext::getContext(env, obj);
-
-    if (context) context->render();
-}
-
-JNIMETHOD(void, draw)(JNIEnv * env, jobject obj, jbyteArray data, jint width, jint height, jint rotation)
-{
-//	LOGE("draw");
-    jbyte* bufferPtr = env->GetByteArrayElements(data, 0);
-
+    jbyte* bufferPtr = env->GetByteArrayElements(data, nullptr);
     jsize arrayLength = env->GetArrayLength(data);
 
-    VKVideoRendererContext* context = VKVideoRendererContext::getContext(env, obj);
-
-    if (context) context->draw((uint8_t *)bufferPtr, (size_t)arrayLength, (size_t)width, (size_t)height, rotation);
+    auto * vkVideoRenderer = (VKVideoRenderer *)env->GetLongField(obj, gFields.context);
+    if (vkVideoRenderer) {
+        vkVideoRenderer->draw((uint8_t *)bufferPtr, (size_t)arrayLength, (size_t)width, (size_t)height, rotation);
+    }
 
     env->ReleaseByteArrayElements(data, bufferPtr, 0);
 }
 
-JNIMETHOD(void, setParameters)(JNIEnv * env, jobject obj, jint params)
+JNIMETHOD(void, nativeSetFilterType)(JNIEnv * env, jobject obj, jint filterType)
 {
-    LOGE("setParameters");
-    VKVideoRendererContext* context = VKVideoRendererContext::getContext(env, obj);
-
-    if (context) context->setParameters((uint32_t)params);
+    LOGE("nativeSetFilterType");
+    auto * vkVideoRenderer = (VKVideoRenderer *)env->GetLongField(obj, gFields.context);
+    if (vkVideoRenderer) {
+        vkVideoRenderer->setFilterType(filterType);
+    }
 }
 
-JNIMETHOD(void, setProgress)(JNIEnv * env, jobject obj, jint params)
+JNIMETHOD(void, nativeSetProgress)(JNIEnv * env, jobject obj, jint params)
 {
-    LOGE("setParameters");
-    VKVideoRendererContext* context = VKVideoRendererContext::getContext(env, obj);
-
-    if (context) context->setProcess((uint32_t)params);
-}
-
-JNIMETHOD(jint, getParameters)(JNIEnv * env, jobject obj)
-{
-LOGE("getParameters");
-VKVideoRendererContext* context = VKVideoRendererContext::getContext(env, obj);
-
-if (context) return context->getParameters();
-
-return 0;
+    LOGE("nativeSetProgress");
+    auto* vkVideoRenderer = (VKVideoRenderer *)env->GetLongField(obj, gFields.context);
+    if (vkVideoRenderer) {
+        vkVideoRenderer->setProcess(params);
+    }
 }

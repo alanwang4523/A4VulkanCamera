@@ -22,10 +22,10 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/btnTriangleDemo"
+                android:id="@+id/btnVulkanCamera"
                 android:layout_width="match_parent"
                 android:layout_height="45dip"
-                android:text="TriangleDemo"
+                android:text="VulkanCameraPreviewDemo"
                 android:textSize="16sp"
                 android:textColor="@color/white"
                 android:background="@color/colorPrimaryDark"

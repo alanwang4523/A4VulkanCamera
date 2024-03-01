@@ -6,11 +6,10 @@ android {
     namespace 'com.alanwang4523.a4vulkancamera'
     compileSdk 33
 //    ndkVersion "16.1.4479499"
-//    ndkVersion "23.1.7779620"
 
     defaultConfig {
         applicationId "com.alanwang4523.a4vulkancamera"
-        minSdk 21
+        minSdk 23
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -48,11 +47,6 @@ android {
             version '3.6.0'
         }
     }
-    buildTypes.release.minifyEnabled = false
-    buildFeatures.prefab  = true
-//    buildFeatures {
-//        viewBinding true
-//    }
 }
 
 dependencies {

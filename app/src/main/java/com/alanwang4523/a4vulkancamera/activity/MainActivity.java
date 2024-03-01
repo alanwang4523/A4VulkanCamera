@@ -1,9 +1,12 @@
-package com.alanwang4523.a4vulkancamera;
+package com.alanwang4523.a4vulkancamera.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.alanwang4523.a4vulkancamera.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -17,14 +20,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.btnTriangleDemo).setOnClickListener(this);
+        findViewById(R.id.btnVulkanCamera).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnTriangleDemo:
-                TriangleDemoActivity.launchActivity(MainActivity.this);
+            case R.id.btnVulkanCamera:
+//                TriangleDemoActivity.launchActivity(MainActivity.this);
+                startActivity(new Intent(MainActivity.this, VulkanCameraActivity.class));
                 break;
         }
     }

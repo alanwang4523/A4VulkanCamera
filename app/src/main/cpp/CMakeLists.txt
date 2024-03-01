@@ -5,17 +5,7 @@
 
 cmake_minimum_required(VERSION 3.6.0)
 
-# Declares and names the project.
-
 project("a4vulkancamera")
-
-# Integrate GameActivity, refer to
-#     https://d.android.com/games/agdk/integrate-game-activity
-# for the detailed instructions.
-#find_package(game-activity REQUIRED CONFIG)
-#
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall \
-#                     -DVK_USE_PLATFORM_ANDROID_KHR")
 
 set(CMAKE_VERBOSE_MAKEFILE on)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -DVK_USE_PLATFORM_ANDROID_KHR -DVK_NO_PROTOTYPES")
@@ -79,7 +69,6 @@ find_library( # Sets the name of the path variable.
 target_link_libraries( # Specifies the target library.
         a4vulkancamera
         ${log-lib}
-#        game-activity::game-activity
         android
         shaderc_lib
         ${GLESv2-lib}

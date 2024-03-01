@@ -14,15 +14,4 @@
 #endif
 
 
-
-#define CALL_VK(func)                                         \
-  if (VK_SUCCESS != (func)) {                                 \
-    LOGE("Error File[%s], line[%d]", __FILE__, __LINE__);     \
-    assert(false);                                            \
-  }
-
-// A macro to check value is VK_SUCCESS
-#define VK_CHECK(x) CALL_VK(x)
-
-
 #endif // _LOG_H_

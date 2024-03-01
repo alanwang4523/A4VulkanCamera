@@ -1,6 +1,4 @@
-package com.alanwang4523.a4vulkancamera;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.alanwang4523.a4vulkancamera.activity;
 
 import android.content.Context;
 import android.content.Intent;
