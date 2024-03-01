@@ -6,7 +6,7 @@ android {
     namespace 'com.alanwang4523.a4vulkancamera'
     compileSdk 33
 //    ndkVersion "16.1.4479499"
-    ndkVersion "23.1.7779620"
+//    ndkVersion "23.1.7779620"
 
     defaultConfig {
         applicationId "com.alanwang4523.a4vulkancamera"
